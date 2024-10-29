@@ -46,4 +46,24 @@ MovieRoutes.delete("/Movies/:id", async (req, res) => {
   }
 });
 
+MovieRoutes.post("/MoviesUpdates", async (req, res) => {
+  const { _id, name, producer, genre } = req.body;
+  try {
+    const newData = await movieModel.findByIdAndUpdate(
+      _id,
+      { $set: { name, producer, genre } },
+      { new: true }
+    );
+    if (newData) {
+      res
+        .status(200)
+        .json({ message: "Data has been successfully updated", newData });
+    } else {
+      res.status(400).json({ message: "Failed to Update Data", newData });
+    }
+  } catch (err) {
+    res.status(500).json({ message: `${err.message}` });
+  }
+});
+
 module.exports = MovieRoutes;
